@@ -23,13 +23,17 @@ const runPull = async argv => {
   let start = (new Date(argv.start)).getTime()
   const end = (new Date(argv.end)).getTime()
   while (start <= end) {
-    const results = await pull(start)
     const filename = filepath(start)
+    const results = await pull(start)
+    start += oneday
+    if (results === null) {
+      console.log('skipping', start)
+      continue
+    }
     mkdirp.sync(path.dirname(filename))
     const buffer = Buffer.from(JSON.stringify(results)) 
     await brotli(buffer, filename)
     console.log({filename, b: buffer.length})
-    start += oneday
   }
 }
 
