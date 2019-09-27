@@ -1,0 +1,20 @@
+{
+  "name": "npm-regressions",
+  "version": "0.0.0",
+  "description": "",
+  "main": "cli.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
+  "license": "(Apache-2.0 AND MIT)",
+  "dependencies": {
+    "brotli-max": "^0.1.1",
+    "mkdirp": "^0.5.1",
+    "yargs": "^14.0.0"
+  }
+}
