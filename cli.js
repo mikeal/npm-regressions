@@ -3,10 +3,15 @@ const { execSync } = require('child_process')
 const pull = require('./lib/pull')
 const mkdirp = require('mkdirp')
 const monthly = require('./lib/monthly')
+const csv = require('./lib/csv')
 const brotli = require('brotli-max')
 const path = require('path')
 
 const options = yargs => {
+  yargs.option('local', {
+    desc: 'Local directory containing minimized files.',
+    default: false
+  })
 }
 
 const runDay = async argv => {
@@ -26,7 +31,7 @@ const runPull = async argv => {
   const end = (new Date(argv.end)).getTime()
   while (start <= end) {
     const filename = filepath(start)
-    const results = await pull(start)
+    const results = await pull(start, argv.local)
     start += oneday
     if (results === null) {
       console.log('skipping', start)
@@ -55,6 +60,11 @@ const runMonthly = async argv => {
 const runAllMonths = async argv => {
   return monthly.all()
 }
+
+const runCSV = async argv => {
+  const str = await csv(argv.month)
+}
+
 const yargs = require('yargs')
 const args = yargs
   .command('day <day>', 'Output the regression for a single day.', options, runDay)
@@ -62,6 +72,7 @@ const args = yargs
   .command('daily-action', 'Daily regression action.', options, runDaily)
   .command('monthly-action', 'Monthly regression action.', options, runMonthly)
   .command('all-months', 'Run montly regressions for everyday.', options, runAllMonths)
+  .command('csv <month>', "Create CSV's from monthly regressions", options, runCSV)
   .argv
 
 if (!args._.length) {

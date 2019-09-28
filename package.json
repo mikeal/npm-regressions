@@ -13,8 +13,11 @@
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
   "license": "(Apache-2.0 AND MIT)",
   "dependencies": {
+    "bent": "^7.0.1",
     "brotli-max": "^0.1.1",
+    "mkcsv": "^1.0.1",
     "mkdirp": "^0.5.1",
+    "reed-richards": "^2.0.2",
     "yargs": "^14.0.0"
   }
 }
