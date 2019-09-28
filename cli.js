@@ -6,6 +6,7 @@ const monthly = require('./lib/monthly')
 const csv = require('./lib/csv')
 const brotli = require('brotli-max')
 const path = require('path')
+const ownerIndex = require('./lib/owner-index.js')
 
 const options = yargs => {
   yargs.option('local', {
@@ -65,6 +66,12 @@ const runCSV = async argv => {
   const str = await csv(argv.month)
 }
 
+const runIndex = async argv => {
+  const index = await ownerIndex(argv.local)
+  const buffer = Buffer.from(JSON.stringify([...index]))
+  await brotli(buffer, 'owner-index.json.br')
+}
+
 const yargs = require('yargs')
 const args = yargs
   .command('day <day>', 'Output the regression for a single day.', options, runDay)
@@ -73,6 +80,7 @@ const args = yargs
   .command('monthly-action', 'Monthly regression action.', options, runMonthly)
   .command('all-months', 'Run montly regressions for everyday.', options, runAllMonths)
   .command('csv <month>', "Create CSV's from monthly regressions", options, runCSV)
+  .command('owner-index', 'Save owner index', options, runIndex)
   .argv
 
 if (!args._.length) {
