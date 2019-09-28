@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const pull = require('./lib/pull')
 const mkdirp = require('mkdirp')
+const monthly = require('./lib/monthly')
 const brotli = require('brotli-max')
 const path = require('path')
 
@@ -37,10 +38,27 @@ const runPull = async argv => {
   }
 }
 
+const runDaily = async argv => {
+  argv.start = Date.now() - (oneday * 3)
+  argv.end = Date.now() - oneday
+  runPull(argv)
+}
+const runMonthly = async argv => {
+  const ts = new Date(Date.now() - (oneday * 5))
+  const [year, month] = ts.toISOString().split('-')
+  await monthly(year, month)
+}
+
+const runAllMonths = async argv => {
+  return monthly.all()
+}
 const yargs = require('yargs')
 const args = yargs
   .command('day <day>', 'Output the regression for a single day.', options, runDay)
   .command('pull <start> <end>', 'Pull data and write regression.', options, runPull)
+  .command('daily-action', 'Daily regression action.', options, runDaily)
+  .command('monthly-action', 'Monthly regression action.', options, runMonthly)
+  .command('all-months', 'Run montly regressions for everyday.', options, runAllMonths)
   .argv
 
 if (!args._.length) {
