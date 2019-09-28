@@ -1,7 +1,7 @@
 on:
   schedule:
     - cron:  '10 4 * * *'
-name: Pull Data and Build
+name: Pull Data Daily
 jobs:
   build:
     name: Build
