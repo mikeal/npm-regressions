@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+const { execSync } = require('child_process')
 const pull = require('./lib/pull')
 const mkdirp = require('mkdirp')
 const monthly = require('./lib/monthly')
@@ -46,6 +47,8 @@ const runDaily = async argv => {
 const runMonthly = async argv => {
   const ts = new Date(Date.now() - (oneday * 5))
   const [year, month] = ts.toISOString().split('-')
+  execSync('git lfs install')
+  execSync(`git lfs pull --include "${year + '/' + month}"`)
   await monthly(year, month)
 }
 
