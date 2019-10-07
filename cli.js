@@ -13,6 +13,9 @@ const options = yargs => {
     desc: 'Local directory containing minimized files.',
     default: false
   })
+  yargs.options('output', {
+    desc: 'Direcotry to write CSV files'
+  })
 }
 
 const runDay = async argv => {
@@ -39,7 +42,7 @@ const runPull = async argv => {
       continue
     }
     mkdirp.sync(path.dirname(filename))
-    const buffer = Buffer.from(JSON.stringify(results)) 
+    const buffer = Buffer.from(JSON.stringify(results))
     await brotli(buffer, filename)
     console.log({filename, b: buffer.length})
   }
@@ -63,7 +66,7 @@ const runAllMonths = async argv => {
 }
 
 const runCSV = async argv => {
-  const str = await csv(argv.month)
+  const str = await csv(argv.start, argv.end, argv.outputDir)
 }
 
 const runIndex = async argv => {
@@ -79,7 +82,7 @@ const args = yargs
   .command('daily-action', 'Daily regression action.', options, runDaily)
   .command('monthly-action', 'Monthly regression action.', options, runMonthly)
   .command('all-months', 'Run montly regressions for everyday.', options, runAllMonths)
-  .command('csv <month>', "Create CSV's from monthly regressions", options, runCSV)
+  .command('csv <start> <end>', "Create CSV's from monthly regressions", options, runCSV)
   .command('owner-index', 'Save owner index', options, runIndex)
   .argv
 
